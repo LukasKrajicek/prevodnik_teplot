@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderní převodník teplot</title>
+    <style>
+        /* Základní stylování stránky */
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            text-align: center;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #2575fc;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #6a11cb;
+        }
+        .result {
+            margin-top: 15px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        @media (max-width: 400px) {
+            .container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Převodník teplot</h1>
+        <input type="number" id="temperature" placeholder="Zadejte teplotu">
+        <button onclick="convertToFahrenheit()">Převést na °F</button>
+        <button onclick="convertToCelsius()">Převést na °C</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function convertToFahrenheit() {
+            const temperature = document.getElementById('temperature').value;
+            const resultElement = document.getElementById('result');
+            
+            if (!temperature) {
+                resultElement.innerText = "Zadejte hodnotu teploty!";
+                return;
+            }
+
+            const celsius = parseFloat(temperature);
+            if (isNaN(celsius)) {
+                resultElement.innerText = "Zadejte platnou hodnotu!";
+                return;
+            }
+            
+            const fahrenheit = (celsius * 9/5) + 32;
+            resultElement.innerHTML = `${celsius.toFixed(2)}°C = <strong>${fahrenheit.toFixed(2)}°F</strong>`;
+        }
+
+        function convertToCelsius() {
+            const temperature = document.getElementById('temperature').value;
+            const resultElement = document.getElementById('result');
+            
+            if (!temperature) {
+                resultElement.innerText = "Zadejte hodnotu teploty!";
+                return;
+            }
+
+            const fahrenheit = parseFloat(temperature);
+            if (isNaN(fahrenheit)) {
+                resultElement.innerText = "Zadejte platnou hodnotu!";
+                return;
+            }
+            
+            const celsius = (fahrenheit - 32) * 5/9;
+            resultElement.innerHTML = `${fahrenheit.toFixed(2)}°F = <strong>${celsius.toFixed(2)}°C</strong>`;
+        }
+    </script>
+</body>
+</html>

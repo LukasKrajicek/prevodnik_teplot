@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Moderní převodník teplot</title>
     <style>
-        /* Základní stylování stránky */
         body {
             font-family: 'Arial', sans-serif;
             display: flex;
@@ -19,7 +18,7 @@
         .container {
             background: rgba(255, 255, 255, 0.1);
             padding: 30px;
-            border-radius: 15px;
+            border-radius: 30px;
             box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
             text-align: center;
             width: 300px;
@@ -27,15 +26,47 @@
         h1 {
             margin-bottom: 20px;
         }
-        input {
+        .toggle {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .toggle label {
+            cursor: pointer;
+        }
+        input[type="number"], input[type="range"] {
             width: 100%;
             padding: 10px;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             margin-bottom: 15px;
             font-size: 16px;
             text-align: center;
             outline: none;
+        }
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            background: #ddd;
+            height: 8px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .range-value {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: bold;
         }
         button {
             width: 100%;
@@ -47,7 +78,7 @@
             font-weight: bold;
             color: #fff;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: 0.3s;
             margin-top: 10px;
         }
         button:hover {
@@ -68,48 +99,81 @@
 <body>
     <div class="container">
         <h1>Převodník teplot</h1>
+        <div class="toggle">
+            <label><input type="radio" name="inputType" value="manual" checked onclick="toggleInput('manual')"> Zadání</label>
+            <label><input type="radio" name="inputType" value="range" onclick="toggleInput('range')"> Posuvník</label>
+        </div>
         <input type="number" id="temperature" placeholder="Zadejte teplotu">
+        <div id="range-container" style="display: none;">
+            <div class="range-value" id="rangeValue">0°C</div>
+            <input type="range" id="temperatureRange" min="-100" max="100" step="0.1" value="0" oninput="updateRangeValue()">
+        </div>
         <button onclick="convertToFahrenheit()">Převést na °F</button>
         <button onclick="convertToCelsius()">Převést na °C</button>
         <div class="result" id="result"></div>
     </div>
 
     <script>
+        function toggleInput(type) {
+            const manualInput = document.getElementById('temperature');
+            const rangeContainer = document.getElementById('range-container');
+
+            if (type === 'manual') {
+                manualInput.style.display = 'block';
+                rangeContainer.style.display = 'none';
+            } else if (type === 'range') {
+                manualInput.style.display = 'none';
+                rangeContainer.style.display = 'block';
+            }
+        }
+
+        function updateRangeValue() {
+            const range = document.getElementById('temperatureRange');
+            const rangeValue = document.getElementById('rangeValue');
+            rangeValue.innerText = `${range.value}°C`;
+        }
+
         function convertToFahrenheit() {
-            const temperature = document.getElementById('temperature').value;
+            const inputType = document.querySelector('input[name="inputType"]:checked').value;
+            const input = inputType === 'manual'
+                ? document.getElementById('temperature').value
+                : document.getElementById('temperatureRange').value;
+
             const resultElement = document.getElementById('result');
-            
-            if (!temperature) {
+            if (!input) {
                 resultElement.innerText = "Zadejte hodnotu teploty!";
                 return;
             }
 
-            const celsius = parseFloat(temperature);
+            const celsius = parseFloat(input);
             if (isNaN(celsius)) {
                 resultElement.innerText = "Zadejte platnou hodnotu!";
                 return;
             }
-            
-            const fahrenheit = (celsius * 9/5) + 32;
+
+            const fahrenheit = (celsius * 9 / 5) + 32;
             resultElement.innerHTML = `${celsius.toFixed(2)}°C = <strong>${fahrenheit.toFixed(2)}°F</strong>`;
         }
 
         function convertToCelsius() {
-            const temperature = document.getElementById('temperature').value;
+            const inputType = document.querySelector('input[name="inputType"]:checked').value;
+            const input = inputType === 'manual'
+                ? document.getElementById('temperature').value
+                : document.getElementById('temperatureRange').value;
+
             const resultElement = document.getElementById('result');
-            
-            if (!temperature) {
+            if (!input) {
                 resultElement.innerText = "Zadejte hodnotu teploty!";
                 return;
             }
 
-            const fahrenheit = parseFloat(temperature);
+            const fahrenheit = parseFloat(input);
             if (isNaN(fahrenheit)) {
                 resultElement.innerText = "Zadejte platnou hodnotu!";
                 return;
             }
-            
-            const celsius = (fahrenheit - 32) * 5/9;
+
+            const celsius = (fahrenheit - 32) * 5 / 9;
             resultElement.innerHTML = `${fahrenheit.toFixed(2)}°F = <strong>${celsius.toFixed(2)}°C</strong>`;
         }
     </script>
